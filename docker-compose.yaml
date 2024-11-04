@@ -1,0 +1,47 @@
+services:
+  backend-app:
+    container_name: backend-app
+    build: ./backend-app
+    ports:
+      - 8081:5000
+    volumes:
+      - ./backend-app:/backend-app
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: 10m
+    stop_signal: SIGINT
+    networks:
+      - app_nw
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine3.19
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: ecoid_db
+      POSTGRES_PASSWORD: admin
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - app_nw
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - 5433:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: teste@email.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    networks:
+      - app_nw
+
+networks:
+  app_nw:
