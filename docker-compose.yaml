@@ -17,7 +17,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   postgres:
-    container_name: postgres
+    container_name: postgress
     image: postgres:alpine3.19
     ports:
       - 5432:5432
@@ -33,7 +33,7 @@ services:
       - app_nw
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadminn
     image: dpage/pgadmin4
     ports:
       - 5433:80

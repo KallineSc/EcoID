@@ -4,8 +4,7 @@ from flask_restx import Api
 from flask_cors import CORS
 from .config import Config
 
-from app.jwtHandlers import configureJwtHandlers
-from .routes.loginRoute import loginNs
+from .routes.authRoute import authNs
 from .database import init_db
 
 jwt = JWTManager()
@@ -27,7 +26,6 @@ def create_app():
     
     CORS(app)
     jwt.init_app(app)
-    configureJwtHandlers(jwt)
-    api.add_namespace(loginNs)
+    api.add_namespace(authNs)
     
     return app
