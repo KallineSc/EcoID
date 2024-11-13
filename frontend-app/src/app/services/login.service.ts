@@ -2,28 +2,29 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginResponse } from '../types/login-response.type';
 import { tap } from 'rxjs';
+import { Route, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  apiUrl: string = "http://localhost:8080/auth"
+  apiUrl: string = "http://localhost:8081"
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private route: Router) { }
 
-  login(email: string, password: string){
-    return this.httpClient.post<LoginResponse>(this.apiUrl + "/login", { email, password }).pipe(
+  login(email: string, senha: string){
+    return this.httpClient.post<LoginResponse>(this.apiUrl + "/auth/", { email, senha }).pipe(
       tap((value) => {
-        sessionStorage.setItem("auth-token", value.token)
-        sessionStorage.setItem("username", value.name)
+        sessionStorage.setItem("access_token", value.access_token)
+        this.route.navigate([""])
       })
     )
   }
 
-  signup(name: string, email: string, password: string){
-    return this.httpClient.post<LoginResponse>(this.apiUrl + "/register", { name, email, password }).pipe(
+  signup(name: string, email: string, senha: string){
+    return this.httpClient.post<LoginResponse>(this.apiUrl + "/register", { name, email, senha }).pipe(
       tap((value) => {
-        sessionStorage.setItem("auth-token", value.token)
+        sessionStorage.setItem("auth-token", value.access_token)
         sessionStorage.setItem("username", value.name)
       })
     )
