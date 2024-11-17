@@ -12,20 +12,21 @@ jwt = JWTManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    
+
     authorizations = {
         "Bearer": {
             "type": "apiKey",
             "in": "header",
             "name": "Authorization",
-            "description": "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+            "description": "Type in the *'Value'* input box below: "
+            "**'Bearer &lt;JWT&gt;'**, where JWT is the token"
         }
     }
     init_db(app)
     api = Api(app, version='1.0', title='EcoID', description='', authorizations=authorizations)
-    
+
     CORS(app)
     jwt.init_app(app)
     api.add_namespace(authNs)
-    
+
     return app
