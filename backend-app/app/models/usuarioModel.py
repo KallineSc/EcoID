@@ -9,4 +9,6 @@ class Usuario(db.Model):
     nome: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     senha: Mapped[str] = mapped_column(String(255), nullable=True)
-    
+
+    def __repr__(self):
+        return f'<User {self.nome}>'
