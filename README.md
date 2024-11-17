@@ -49,3 +49,8 @@ Agora, vamos configurar e rodar o **frontend** com **Angular**.
     ```
 
     Acesse essa URL no seu navegador para visualizar a aplicação frontend.
+
+    A rota de login do sistema pode ser acessada através da URL:
+    ```
+    http://localhost:4200/login
+    ```
