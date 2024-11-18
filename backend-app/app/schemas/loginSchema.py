@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields
 
 class LoginSchema(Schema):
     email = fields.Str(required=True, error_messages={"required": "O campo 'email' é obrigatório."})
