@@ -5,6 +5,7 @@ from flask_cors import CORS
 from .config import Config
 
 from .routes.authRoute import authNs
+from .routes.usuarioRoute import usuarioNs
 from .database import init_db
 
 jwt = JWTManager()
@@ -24,9 +25,9 @@ def create_app():
     }
     init_db(app)
     api = Api(app, version='1.0', title='EcoID', description='', authorizations=authorizations)
-
     CORS(app)
     jwt.init_app(app)
     api.add_namespace(authNs)
+    api.add_namespace(usuarioNs)
 
     return app
