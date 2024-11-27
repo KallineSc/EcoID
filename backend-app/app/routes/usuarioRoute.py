@@ -1,11 +1,11 @@
 import os
 from flask import request
 from flask_restx import Resource
-from flask_jwt_extended import jwt_required
 from ..schemas.usuarioSchema import UsuarioSchema
 from ..models.usuarioModel import Usuario
 from ..swagger.usuarioModel import usuarioNs, UsuarioModel
 from marshmallow import ValidationError
+from werkzeug.security import generate_password_hash
 from ..database import db
 
 @usuarioNs.route('/')
@@ -13,7 +13,6 @@ class UsuarioPostResource(Resource):
     @usuarioNs.doc(description='Endpoint para fazer operações do usuário')
     @usuarioNs.expect(UsuarioModel)
     @usuarioNs.response(200, 'Successo', UsuarioModel)
-    @jwt_required()
     def post(self):
         """Cria um novo usuário"""
         schema = UsuarioSchema()
@@ -26,10 +25,12 @@ class UsuarioPostResource(Resource):
         if Usuario.query.filter_by(email=data['email']).first():
             return {"erros": "Email já cadastrado"}, 400
         
+        hashed_password = generate_password_hash(data['senha'])
+
         novo_usuario = Usuario(
             nome=data['nome'],
             email=data['email'],
-            senha=data['senha']
+            senha=hashed_password
         )
 
         db.session.add(novo_usuario)
