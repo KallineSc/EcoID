@@ -10,10 +10,9 @@ from ..database import db
 
 @usuarioNs.route('/')
 class UsuarioResource(Resource):
-    @usuarioNs.doc(description='Endpoint para cadastrar usuários', security='Bearer')
+    @usuarioNs.doc(description='Endpoint para cadastrar usuários')
     @usuarioNs.expect(UsuarioModel)
     @usuarioNs.response(200, 'Successo', UsuarioModel)
-    @jwt_required()
     def post(self):
         """Cria um novo usuário"""
         schema = UsuarioSchema()
