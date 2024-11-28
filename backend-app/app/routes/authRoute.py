@@ -6,6 +6,7 @@ from ..schemas.loginSchema import LoginSchema
 from dotenv import load_dotenv, find_dotenv
 from ..models.authModel import AuthModel
 from ..models.usuarioModel import Usuario
+from werkzeug.security import check_password_hash
 
 from marshmallow import ValidationError
 
@@ -24,8 +25,6 @@ class Token(Resource):
     @authNs.doc(description='Endpoint para fazer autenticação')
     @authNs.expect(AuthModel)
     @authNs.response(200, 'Success', AuthModel)
-    # @authNs.response(400, 'Bad Request', authError400)
-    # @authNs.response(401, 'Unauthorized', authError401)
     def post(self):
         schema = LoginSchema()
         try:
@@ -34,8 +33,7 @@ class Token(Resource):
             return {"errors": err.messages}, 400
 
         usuario = Usuario.query.filter_by(email=data["email"]).first()
-        # not check_password_hash(usuario.senha, data["senha"])
-        if not usuario:
+        if not usuario or not check_password_hash(usuario.senha, data['senha']):
             return {"error": "Credenciais inválidas"}, 401
 
         access_token = create_access_token(identity=usuario.id)

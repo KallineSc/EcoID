@@ -1,4 +1,3 @@
-import os
 from flask import request
 from flask_restx import Resource
 from flask_jwt_extended import jwt_required
@@ -7,6 +6,7 @@ from ..models.usuarioModel import Usuario
 from ..swagger.usuarioModel import usuarioNs, UsuarioModel
 from marshmallow import ValidationError
 from ..database import db
+from werkzeug.security import generate_password_hash
 
 @usuarioNs.route('/')
 class UsuarioResource(Resource):
@@ -25,10 +25,12 @@ class UsuarioResource(Resource):
         if Usuario.query.filter_by(email=data['email']).first():
             return {"erros": "Email já cadastrado"}, 400
         
+        senha_hash = generate_password_hash(data['senha'])
+
         novo_usuario = Usuario(
             nome=data['nome'],
             email=data['email'],
-            senha=data['senha']
+            senha=senha_hash
         )
 
         db.session.add(novo_usuario)
