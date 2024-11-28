@@ -45,3 +45,15 @@ class UsuarioResource(Resource):
         usuarios = Usuario.query.all()
         resultado = [{'id': str(usuario.id), 'nome': usuario.nome, 'email': usuario.email} for usuario in usuarios]
         return {"usuarios": resultado}, 200
+
+@usuarioNs.route('/<uuid:id>')
+@usuarioNs.param('id', 'ID do usuário')
+class UsuarioResource(Resource):
+    @usuarioNs.doc(description='Endpoint para listar um usuário específico', security='Bearer')
+    @jwt_required()
+    def get(self, id):
+        """Obtém um usuário específico"""
+        usuario = Usuario.query.filter_by(id=str(id)).first()
+        if not usuario:
+            return {"error": "Usuário não encontrado"}, 401
+        return {'id': str(usuario.id), 'nome': usuario.nome, 'email': usuario.email}, 200
