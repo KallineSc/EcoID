@@ -19,4 +19,19 @@ UsuarioModel = usuarioNs.model('Usuario', {
         example='senhaSegura123'
     )
 })
+
+UsuarioUpdateModel = usuarioNs.model('Usuario', {
+    'nome': fields.String(
+        description='Nome do usuário',
+        example='João Silva'
+    ),
+    'email': fields.String(
+        description='Email do usuário',
+        example='joao.silva@example.com'
+    ),
+    'senha': fields.String(
+        description='Senha do usuário',
+        example='senhaSegura123'
+    )
+})
 usuarioNs.add_model('Usuario', UsuarioModel)
