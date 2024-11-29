@@ -6,6 +6,7 @@ from .config import Config
 
 from .routes.authRoute import authNs
 from .routes.usuarioRoute import usuarioNs
+from .routes.denunciaRoute import denunciaNs
 from .database import init_db
 
 jwt = JWTManager()
@@ -29,5 +30,6 @@ def create_app():
     jwt.init_app(app)
     api.add_namespace(authNs)
     api.add_namespace(usuarioNs)
+    api.add_namespace(denunciaNs)
 
     return app
