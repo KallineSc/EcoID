@@ -1,6 +1,8 @@
 <main>
     <section class="form-section">
-        <img src="/assets/svg/logo.png"/>
+        <div>
+            <img src="/assets/svg/logo.png"/>
+        </div>
        <h2>{{ title }}</h2>
        <ng-content></ng-content>
        <div class="btn-wrapper">
@@ -12,13 +14,9 @@
                 {{ primaryBtnText }}
             </button>
             <div class="divider">
-                <div></div>
-                <span><strong>OR</strong></span>
-                <div></div>
-            </div>
-            <button class="btn-secondary" (click)="navigate()">{{ secondaryBtnText }}</button>
+                {{ textDivider }}
+                <button class="btn-secondary" (click)="navigate()">{{ secondaryBtnText }}</button>
+            </div>            
        </div>
-    </section>
-    <section class="main-section">
     </section>
 </main>

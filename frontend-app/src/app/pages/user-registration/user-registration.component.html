@@ -1,0 +1,66 @@
+<app-default-login-layout
+    title="Faça seu cadastro!"
+    primaryBtnText="Cadastrar"
+    secondaryBtnText="Login"
+    textDivider="Já tem uma conta?"
+    (submit)="submit()"
+    (navigate)="navigate()"
+>
+    <form [formGroup]="userRegistrationForm">
+        <app-primary-input
+            formControlName="username"
+            inputName="username"
+            type="text"
+            label="Nome completo"
+            placeholder="João Silva Oliveira"
+            [class.is-invalid]="hasError('username', 'required') || hasError('username', 'minlength')"
+        >
+        </app-primary-input>
+        <div *ngIf="hasError('username', 'required')" class="invalid-feedback">
+            Nome do usuário é obrigatório
+        </div>
+        <div *ngIf="hasError('username', 'minlength')" class="invalid-feedback">
+            Nome do usuário deve ter no mínimo 3 caracteres
+        </div>
+        <app-primary-input
+            formControlName="email"
+            inputName="email"
+            type="email"
+            label="E-mail"
+            placeholder="johndoe@gmail.com"
+            [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+        >
+        </app-primary-input>
+        <div *ngIf="hasError('email', 'required')" class="invalid-feedback">
+            E-mail é obrigatório
+        </div>
+        <div *ngIf="hasError('email', 'email')" class="invalid-feedback">
+            E-mail inválido
+        </div>
+        <app-primary-input
+            formControlName="password"
+            inputName="password"
+            type="password"
+            label="Senha"
+            [class.is-invalid]="hasError('password', 'required') || hasError('password', 'minlength')"
+        >
+        </app-primary-input>
+        <div *ngIf="hasError('password', 'required')" class="invalid-feedback">
+            Senha é obrigatória
+        </div>
+        <div *ngIf="hasError('password', 'minlength')" class="invalid-feedback">
+            Senha deve ter no mínimo 6 caracteres
+        </div>
+        <app-primary-input
+            formControlName="confirmPassword"
+            inputName="confirmPassword"
+            type="password"
+            label="Confirmação da Senha"
+            [class.is-invalid]="hasError('confirmPassword', 'required')"
+        >
+        </app-primary-input>
+        <div *ngIf="hasError('confirmPassword', 'required')" class="invalid-feedback">
+            Confirmação de senha é obrigatória
+        </div>
+    </form>
+</app-default-login-layout>
