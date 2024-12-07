@@ -1,14 +1,12 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-// Modifique o appConfig para incluir provideHttpClient
-bootstrapApplication(AppComponent, {
-  ...appConfig,  // Mantenha todas as configurações existentes
-  providers: [
-    ...appConfig.providers || [],  // Garantir que qualquer configuração existente seja mantida
-    provideHttpClient(withFetch()) // Adiciona a configuração do fetch para o HttpClient
-  ]
-})
-  .catch((err) => console.error(err));
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
