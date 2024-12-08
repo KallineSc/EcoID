@@ -6,7 +6,7 @@
                 <ng-template pTemplate="right">
                     <div class="my-2">
                         <button pButton pRipple label="Cadastrar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-                        <button pButton pRipple label="Deletar" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+                        <button pButton pRipple label="Deletar" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedDenuncias()" [disabled]="!selectedDenuncias || !selectedDenuncias.length"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
@@ -14,7 +14,7 @@
             <p-table #dt [value]="denuncias" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedDenuncias" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Denúncia</h5>
+                        <h5 class="m-0">Denúncias</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Pesquisar..."  class="w-full sm:w-auto"/>
@@ -69,90 +69,56 @@
             </p-table>
         </div>
 
-        <!-- <p-dialog [(visible)]="denunciaDialog" [style]="{width: '450px'}" header="denuncia Details" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="denunciaDialog" [style]="{width: '450px'}" header="Cadastrar Denúncia" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
-                <img [src]="'assets/images/denuncia/' + denuncia.image" [alt]="denuncia.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="denuncia.image">
                 <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" [(ngModel)]="denuncia.name" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !denuncia.name}"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !denuncia.name">Name is required.</small>
+                    <label for="titulo">Título</label>
+                    <input type="text" pInputText id="titulo" name="titulo" [(ngModel)]="denuncia.titulo" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !denuncia.titulo}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !denuncia.titulo">Título é obrigatório.</small>
                 </div>
                 <div class="field">
-                    <label for="description">Description</label>
-                    <textarea id="description" pInputTextarea [(ngModel)]="denuncia.description" required rows="3" cols="20"></textarea>
-                </div>
-                <div class="field">
-                    <label for="status">Inventory Status</label>
-                    <p-dropdown [(ngModel)]="denuncia.inventoryStatus" inputId="inventoryStatus" optionValue="label" [options]="statuses" placeholder="Select">
-                        <ng-template pTemplate="selectedItem">
-                            <span *ngIf="denuncia && denuncia.inventoryStatus" [class]="'denuncia-badge status-' + denuncia.inventoryStatus.toString().toLowerCase()">{{denuncia.inventoryStatus}}</span>
-                        </ng-template>
-                        <ng-template let-option pTemplate="item">
-                            <span [class]="'denuncia-badge status-' + option.value">{{option.label}}</span>
-                        </ng-template>
-                    </p-dropdown>
-                </div>
-
-                <div class="field">
-                    <label class="mb-3">Category</label>
-                    <div class="formgrid grid">
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category1">Accessories</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category2">Clothing</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category3">Electronics</label>
-                        </div>
-                        <div class="field-radiobutton col-6">
-                            <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="product.category"></p-radioButton>
-                            <label for="category4">Fitness</label>
-                        </div>
-                    </div>
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" name="descricao" pInputTextarea [(ngModel)]="denuncia.descricao" required rows="3" cols="20"></textarea>
                 </div>
 
                 <div class="formgrid grid">
                     <div class="field col">
-                        <label for="price">Price</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+                        <label for="latitude">Latitude</label>
+                        <p-inputNumber id="latitude" name="latitude" [(ngModel)]="denuncia.latitude" mode="decimal" min="-90" max="90" step="0.000001"></p-inputNumber>
                     </div>
                     <div class="field col">
-                        <label for="quantity">Quantity</label>
-                        <p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
+                        <label for="longitude">Longitude</label>
+                        <p-inputNumber id="longitude" name="longitude" [(ngModel)]="denuncia.longitude" mode="decimal" min="-180" max="180" step="0.000001"></p-inputNumber>
                     </div>
-                </div>
+                </div>                
             </ng-template>
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveDenuncia()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteDenunciaDialog" header="Confirmação" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="product">Are you sure you want to delete <b>{{product.name}}</b>?</span>
+                <span *ngIf="denuncia">Tem certeza de que deseja excluir <b>{{denuncia.titulo}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Não" (click)="deleteDenunciaDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sim" (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteDenunciasDialog" header="Confirmação" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
+                <span>Tem certeza de que deseja excluir a denúncia selecionada?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProductsDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Não" (click)="deleteDenunciasDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sim" (click)="confirmDeleteSelected()"></button>
             </ng-template>
-        </p-dialog> -->
+        </p-dialog> 
     </div>
 </div>

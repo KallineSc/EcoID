@@ -25,6 +25,48 @@ export class DenunciaService {
             .then(data => data); 
     }
 
+    postDenuncias(denuncia: Denuncia) {
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('Access Token:', accessToken);
+    
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
+    
+        return this.http.post<any>(`${this.apiUrl}`, denuncia, { headers })
+            .toPromise()
+            .then(res => {
+                console.log('Denúncia cadastrada com sucesso!', res);
+                return res;
+            })
+            .catch(error => {
+                console.error('Erro ao salvar a denúncia', error);
+                throw error; 
+            });
+    }
+
+    deleteDenuncia(id: string) {
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('Access Token:', accessToken);
+    
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
+    
+        return this.http.delete<any>(`${this.apiUrl}${id}`, { headers })
+            .toPromise()
+            .then(res => {
+                console.log('Denúncia excluída com sucesso!', res);
+                return res;
+            })
+            .catch(error => {
+                console.error('Erro ao excluir a denúncia', error);
+                throw error; 
+            });
+    }
+
     // getDenunciasMixed() {
     //     return this.http.get<any>('assets/data/denuncias-mixed.json')
     //         .toPromise()

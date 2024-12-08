@@ -3,6 +3,8 @@ import { Denuncia } from 'src/app/api/denuncia';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DenunciaService } from 'src/app/service/denuncia.service';
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './denuncia.component.html',
@@ -30,7 +32,7 @@ export class DenunciaComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private denunciaService: DenunciaService, private messageService: MessageService) { }
+    constructor(private denunciaService: DenunciaService, private messageService: MessageService, private router: Router) { }
 
     ngOnInit() {
         this.denunciaService.getDenuncias().then(data => this.denuncias = data);
@@ -44,69 +46,114 @@ export class DenunciaComponent implements OnInit {
         ];
     }
 
-    // openNew() {
-    //     this.denuncia = {};
-    //     this.submitted = false;
-    //     this.denunciaDialog = true;
-    // }
+    openNew() {
+        this.denuncia = {};
+        this.submitted = false;
+        this.denunciaDialog = true;
+    }
 
-    // deleteSelectedDenuncias() {
-    //     this.deleteDenunciasDialog = true;
-    // }
+    deleteSelectedDenuncias() {
+        this.deleteDenunciasDialog = true;
+    }
 
     // editDenuncia(denuncia: Denuncia) {
     //     this.denuncia = { ...denuncia };
     //     this.denunciaDialog = true;
     // }
 
-    // deleteDenuncia(denuncia: Denuncia) {
-    //     this.deleteDenunciaDialog = true;
-    //     this.denuncia = { ...denuncia };
-    // }
+    deleteDenuncia(denuncia: Denuncia) {
+        this.deleteDenunciaDialog = true;
+        this.denuncia = { ...denuncia };
+    }
 
-    // confirmDeleteSelected() {
-    //     this.deleteDenunciasDialog = false;
-    //     this.denuncias = this.denuncias.filter(val => !this.selectedDenuncias.includes(val));
-    //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Denúncias deletadas', life: 3000 });
-    //     this.selectedDenuncias = [];
-    // }
+    confirmDeleteSelected() {
+        this.deleteDenunciasDialog = false;
+        
+        // Processa cada denúncia selecionada
+        const deletePromises = this.selectedDenuncias.map((denuncia) => {
+            return this.denunciaService.deleteDenuncia(denuncia.id).then(
+                (response) => {
+                    console.log('Denúncia excluída com sucesso:', denuncia.id);
+                },
+                (error) => {
+                    console.error('Erro ao excluir a denúncia:', denuncia.id, error);
+                    this.messageService.add({ severity: 'error', summary: 'Erro', detail: `Falha ao excluir a denúncia ${denuncia.id}`, life: 3000 });
+                }
+            );
+        });
+    
+        Promise.all(deletePromises)
+            .then(() => {
+                this.denuncias = this.denuncias.filter(val => !this.selectedDenuncias.includes(val));
+                console.log('Denúncias restantes:', this.denuncias);
+                this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncias deletadas', life: 3000 });
+            })
+            .catch((error) => {
+                console.error('Erro geral ao excluir as denúncias:', error);
+                this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao excluir algumas denúncias', life: 3000 });
+            });
+    
+        this.selectedDenuncias = [];
+    }
+    
 
-    // confirmDelete() {
-    //     this.deleteProductDialog = false;
-    //     this.products = this.products.filter(val => val.id !== this.product.id);
-    //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-    //     this.product = {};
-    // }
+    confirmDelete() {
+        this.deleteDenunciaDialog = false;
+        this.denuncias = this.denuncias.filter(val => val.id !== this.denuncia.id);
+        console.log(this.denuncias);
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'denuncia Deleted', life: 3000 });
+        this.denuncia = {};
+    }
 
-    // hideDialog() {
-    //     this.denunciaDialog = false;
-    //     this.submitted = false;
-    // }
+    hideDialog() {
+        this.denunciaDialog = false;
+        this.submitted = false;
+    }
 
-    // saveProduct() {
-    //     this.submitted = true;
+    getUserIdFromToken(): string | null {
+        const token = localStorage.getItem('accessToken');
+        console.error(token);
+        if (token) {
+            try {
+                const decoded: any = jwtDecode(token);  
+                return decoded.sub; 
+            } catch (error) {
+                console.error('Erro ao decodificar o token', error);
+                return null;
+            }
+        }
+        return null; 
+    }
 
-    //     if (this.product.name?.trim()) {
-    //         if (this.product.id) {
-    //             // @ts-ignore
-    //             this.product.inventoryStatus = this.product.inventoryStatus.value ? this.product.inventoryStatus.value : this.product.inventoryStatus;
-    //             this.products[this.findIndexById(this.product.id)] = this.product;
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-    //         } else {
-    //             this.product.id = this.createId();
-    //             this.product.code = this.createId();
-    //             this.product.image = 'product-placeholder.svg';
-    //             // @ts-ignore
-    //             this.product.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-    //             this.products.push(this.product);
-    //             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-    //         }
-
-    //         this.products = [...this.products];
-    //         this.productDialog = false;
-    //         this.product = {};
-    //     }
-    // }
+    saveDenuncia() {
+        this.submitted = true;
+    
+        if (this.denuncia.titulo?.trim() && this.denuncia.descricao?.trim() && this.denuncia.latitude && this.denuncia.longitude) {
+            const userId = this.getUserIdFromToken();
+            if (userId) {
+                this.denuncia.usuario_id = userId;
+                console.log(this.denuncia);
+                this.denunciaService.postDenuncias(this.denuncia)
+                    .then(response => {
+                        console.log('Denúncia salva com sucesso', response);
+                        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncia criada com sucesso', life: 3000 });
+                        setTimeout(() => {
+                            this.denunciaDialog = false;
+                            this.denuncia = {};  
+                            window.location.reload();  
+                        }, 1500); 
+                    })
+                    .catch(error => {
+                        console.error('Erro ao salvar a denúncia', error);
+                        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao salvar a denúncia', life: 3000 });
+                    });
+            } else {
+                this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Usuário não autenticado.', life: 3000 });
+            }
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Preencha todos os campos corretamente.', life: 3000 });
+        }
+    }    
 
     // findIndexById(id: string): number {
     //     let index = -1;
@@ -129,7 +176,7 @@ export class DenunciaComponent implements OnInit {
     //     return id;
     // }
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    }
+    // onGlobalFilter(table: Table, event: Event) {
+    //     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    // }
 }

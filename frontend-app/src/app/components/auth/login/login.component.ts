@@ -24,15 +24,15 @@ export class LoginComponent {
     constructor(private authService: AuthService, private router: Router) {}
 
     onLogin() {
-        this.authService.login(this.email, this.password).subscribe(
-          (response) => {
-            console.log('Login bem-sucedido', response);
-            localStorage.setItem('accessToken', response.access_token);
-            this.router.navigate(['/']);
-          },
-          (error) => {
-            console.error('Erro no login', error);
-          }
-        );
+      this.authService.login(this.email, this.password).subscribe(
+        (response) => {
+          console.log('Login bem-sucedido', response);
+          localStorage.setItem('accessToken', response.access_token);
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          console.error('Erro no login', error);
+        }
+      );
     }
 }
