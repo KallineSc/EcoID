@@ -35,7 +35,8 @@ export class DenunciaComponent implements OnInit {
     constructor(private denunciaService: DenunciaService, private messageService: MessageService, private router: Router) { }
 
     ngOnInit() {
-        this.denunciaService.getDenuncias().then(data => this.denuncias = data);
+        const userId = this.getUserIdFromToken();
+        this.denunciaService.getDenuncias(userId).then(data => this.denuncias = data);
 
         this.cols = [
             { field: 'ID', header: 'ID' },
@@ -189,28 +190,6 @@ export class DenunciaComponent implements OnInit {
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Preencha todos os campos corretamente.', life: 3000 });
         }
     }
-    
-
-    // findIndexById(id: string): number {
-    //     let index = -1;
-    //     for (let i = 0; i < this.products.length; i++) {
-    //         if (this.products[i].id === id) {
-    //             index = i;
-    //             break;
-    //         }
-    //     }
-
-    //     return index;
-    // }
-
-    // createId(): string {
-    //     let id = '';
-    //     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //     for (let i = 0; i < 5; i++) {
-    //         id += chars.charAt(Math.floor(Math.random() * chars.length));
-    //     }
-    //     return id;
-    // }
 
     onGlobalFilter(table: Table, event: Event) {
         const value = (event.target as HTMLInputElement).value.trim().toLowerCase(); 

@@ -9,20 +9,25 @@ export class DenunciaService {
     
     constructor(private http: HttpClient) { }
     
-    getDenuncias() {
-        const body = { };
+    getDenuncias(userId) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log(accessToken);
+        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
         }
-
+    
         return this.http.get<any>(`${this.apiUrl}`, { headers })
             .toPromise()
-            .then(res => res.denuncias as Denuncia[]) 
-            .then(data => data); 
+            .then(res => {
+                const denuncias = res.denuncias as Denuncia[];
+                return denuncias.filter(denuncia => denuncia.usuario_id === userId);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar denúncias:', error);
+                throw error;
+            });
     }
 
     postDenuncias(denuncia: Denuncia) {
