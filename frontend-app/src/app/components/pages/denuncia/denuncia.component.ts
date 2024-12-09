@@ -87,6 +87,9 @@ export class DenunciaComponent implements OnInit {
                 this.denuncias = this.denuncias.filter(val => !this.selectedDenuncias.includes(val));
                 console.log('Denúncias restantes:', this.denuncias);
                 this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncias deletadas', life: 3000 });
+                setTimeout(() => {
+                    window.location.reload();  
+                }, 1000);
             })
             .catch((error) => {
                 console.error('Erro geral ao excluir as denúncias:', error);
@@ -130,7 +133,6 @@ export class DenunciaComponent implements OnInit {
 
     getUserIdFromToken(): string | null {
         const token = localStorage.getItem('accessToken');
-        console.error(token);
         if (token) {
             try {
                 const decoded: any = jwtDecode(token);  

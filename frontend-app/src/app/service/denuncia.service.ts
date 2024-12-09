@@ -11,7 +11,6 @@ export class DenunciaService {
     
     getDenuncias(userId) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
@@ -32,7 +31,6 @@ export class DenunciaService {
 
     postDenuncias(denuncia: Denuncia) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
@@ -53,7 +51,6 @@ export class DenunciaService {
 
     updateDenuncia(denuncia: Denuncia) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
@@ -74,7 +71,6 @@ export class DenunciaService {
 
     deleteDenuncia(id: string) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
@@ -93,17 +89,4 @@ export class DenunciaService {
             });
     }
 
-    // getDenunciasMixed() {
-    //     return this.http.get<any>('assets/data/denuncias-mixed.json')
-    //         .toPromise()
-    //         .then(res => res.data as Denuncia[])
-    //         .then(data => data);
-    // }
-
-    // getDenunciasWithOrdersSmall() {
-    //     return this.http.get<any>('assets/data/denuncias-orders-small.json')
-    //         .toPromise()
-    //         .then(res => res.data as Denuncia[])
-    //         .then(data => data);
-    // }
 }

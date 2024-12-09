@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { DenunciaService } from './service/denuncia.service';
+import { UsuarioService } from './service/usuario.service';
 import { AuthService } from './service/auth.service';
 import { IconService } from './service/icon.service';
 
@@ -12,7 +13,7 @@ import { IconService } from './service/icon.service';
     declarations: [AppComponent, NotfoundComponent],
     imports: [AppRoutingModule, AppLayoutModule],
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },IconService, DenunciaService, AuthService
+        { provide: LocationStrategy, useClass: PathLocationStrategy },IconService, DenunciaService, UsuarioService, AuthService
     ],
     bootstrap: [AppComponent],
 })
