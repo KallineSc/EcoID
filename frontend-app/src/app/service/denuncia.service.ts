@@ -46,6 +46,27 @@ export class DenunciaService {
             });
     }
 
+    updateDenuncia(denuncia: Denuncia) {
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('Access Token:', accessToken);
+    
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
+    
+        return this.http.put<any>(`${this.apiUrl}${denuncia.id}`, denuncia, { headers })
+            .toPromise()
+            .then(res => {
+                console.log('Denúncia atualizada com sucesso!', res);
+                return res;
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar a denúncia', error);
+                throw error; 
+            });
+    }    
+
     deleteDenuncia(id: string) {
         const accessToken = localStorage.getItem('accessToken');
         console.log('Access Token:', accessToken);

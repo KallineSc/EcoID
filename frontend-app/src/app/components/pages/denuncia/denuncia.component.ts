@@ -56,10 +56,10 @@ export class DenunciaComponent implements OnInit {
         this.deleteDenunciasDialog = true;
     }
 
-    // editDenuncia(denuncia: Denuncia) {
-    //     this.denuncia = { ...denuncia };
-    //     this.denunciaDialog = true;
-    // }
+    editDenuncia(denuncia: Denuncia) {
+        this.denuncia = { ...denuncia };
+        this.denunciaDialog = true;
+    }
 
     deleteDenuncia(denuncia: Denuncia) {
         this.deleteDenunciaDialog = true;
@@ -69,7 +69,6 @@ export class DenunciaComponent implements OnInit {
     confirmDeleteSelected() {
         this.deleteDenunciasDialog = false;
         
-        // Processa cada denúncia selecionada
         const deletePromises = this.selectedDenuncias.map((denuncia) => {
             return this.denunciaService.deleteDenuncia(denuncia.id).then(
                 (response) => {
@@ -98,12 +97,30 @@ export class DenunciaComponent implements OnInit {
     
 
     confirmDelete() {
-        this.deleteDenunciaDialog = false;
-        this.denuncias = this.denuncias.filter(val => val.id !== this.denuncia.id);
-        console.log(this.denuncias);
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'denuncia Deleted', life: 3000 });
-        this.denuncia = {};
+        this.deleteDenunciaDialog = false; 
+    
+        if (this.denuncia.id) {
+            this.denunciaService.deleteDenuncia(this.denuncia.id).then(
+                (response) => {
+                    console.log('Denúncia excluída com sucesso:', this.denuncia.id);
+                    this.denuncias = this.denuncias.filter(val => val.id !== this.denuncia.id);
+                    console.log('Denúncias restantes:', this.denuncias);
+    
+                    this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncia excluída', life: 3000 });
+
+                    this.denuncia = {};
+                },
+                (error) => {
+                    console.error('Erro ao excluir a denúncia:', error);
+                    this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao excluir a denúncia', life: 3000 });
+                }
+            );
+        } else {
+            console.error('ID da denúncia não encontrado.');
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Denúncia inválida', life: 3000 });
+        }
     }
+    
 
     hideDialog() {
         this.denunciaDialog = false;
@@ -130,30 +147,49 @@ export class DenunciaComponent implements OnInit {
     
         if (this.denuncia.titulo?.trim() && this.denuncia.descricao?.trim() && this.denuncia.latitude && this.denuncia.longitude) {
             const userId = this.getUserIdFromToken();
+            
             if (userId) {
                 this.denuncia.usuario_id = userId;
-                console.log(this.denuncia);
-                this.denunciaService.postDenuncias(this.denuncia)
-                    .then(response => {
-                        console.log('Denúncia salva com sucesso', response);
-                        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncia criada com sucesso', life: 3000 });
-                        setTimeout(() => {
-                            this.denunciaDialog = false;
-                            this.denuncia = {};  
-                            window.location.reload();  
-                        }, 1500); 
-                    })
-                    .catch(error => {
-                        console.error('Erro ao salvar a denúncia', error);
-                        this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao salvar a denúncia', life: 3000 });
-                    });
+    
+                if (this.denuncia.id) {
+                    this.denunciaService.updateDenuncia(this.denuncia)
+                        .then(response => {
+                            console.log('Denúncia atualizada com sucesso:', response);
+                            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncia atualizada com sucesso', life: 3000 });
+                            setTimeout(() => {
+                                this.denunciaDialog = false;
+                                this.denuncia = {};  
+                                window.location.reload();  
+                            }, 1500);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao atualizar a denúncia:', error);
+                            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao atualizar a denúncia', life: 3000 });
+                        });
+                } else {
+                    this.denunciaService.postDenuncias(this.denuncia)
+                        .then(response => {
+                            console.log('Denúncia salva com sucesso:', response);
+                            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Denúncia criada com sucesso', life: 3000 });
+                            setTimeout(() => {
+                                this.denunciaDialog = false;
+                                this.denuncia = {};  
+                                window.location.reload();  
+                            }, 1500);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao salvar a denúncia:', error);
+                            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao salvar a denúncia', life: 3000 });
+                        });
+                }
             } else {
                 this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Usuário não autenticado.', life: 3000 });
             }
         } else {
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Preencha todos os campos corretamente.', life: 3000 });
         }
-    }    
+    }
+    
 
     // findIndexById(id: string): number {
     //     let index = -1;
@@ -176,7 +212,8 @@ export class DenunciaComponent implements OnInit {
     //     return id;
     // }
 
-    // onGlobalFilter(table: Table, event: Event) {
-    //     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    // }
+    onGlobalFilter(table: Table, event: Event) {
+        const value = (event.target as HTMLInputElement).value.trim().toLowerCase(); 
+        table.filterGlobal(value, 'contains'); 
+    }
 }
