@@ -1,15 +1,21 @@
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
+import { authGuard } from './auth.guard';
 
 @NgModule({
     imports: [
         RouterModule.forRoot([
             {
-                path: '', component: AppLayoutComponent,
+                path: '', redirectTo:'home', pathMatch:'full'
+            },            
+            {
+                path: 'home', 
+                component: AppLayoutComponent,
+                canMatch: [authGuard],
                 children: [
-                    { path: '', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+                    { path: 'home', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'pages', loadChildren: () => import('./components/pages/pages.module').then(m => m.PagesModule) }
                 ]
             },
