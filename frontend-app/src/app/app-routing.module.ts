@@ -15,7 +15,7 @@ import { authGuard } from './auth.guard';
                 component: AppLayoutComponent,
                 canMatch: [authGuard],
                 children: [
-                    { path: 'home', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+                    { path: 'dashboard', loadChildren: () => import('./components/pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
                     { path: 'pages', loadChildren: () => import('./components/pages/pages.module').then(m => m.PagesModule) }
                 ]
             },

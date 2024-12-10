@@ -50,27 +50,26 @@ export class UsuarioService {
     }
     
 
-    // // Criar um novo usuário
-    // postUsuario(usuario: Usuario) {
-    //     const accessToken = localStorage.getItem('accessToken');
-    //     console.log('Access Token:', accessToken);
+    postUsuario(usuario: Usuario) {
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('Access Token:', accessToken);
     
-    //     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    //     if (accessToken) {
-    //         headers = headers.set('Authorization', `Bearer ${accessToken}`);
-    //     }
+        let headers = new HttpHeaders().set('Content-Type', 'application/json');
+        if (accessToken) {
+            headers = headers.set('Authorization', `Bearer ${accessToken}`);
+        }
     
-    //     return this.http.post<any>(`${this.apiUrl}`, usuario, { headers })
-    //         .toPromise()
-    //         .then(res => {
-    //             console.log('Usuário cadastrado com sucesso!', res);
-    //             return res;
-    //         })
-    //         .catch(error => {
-    //             console.error('Erro ao salvar o usuário', error);
-    //             throw error; 
-    //         });
-    // }
+        return this.http.post<any>(`${this.apiUrl}`, usuario, { headers })
+            .toPromise()
+            .then(res => {
+                console.log('Usuário cadastrado com sucesso!', res);
+                return res;
+            })
+            .catch(error => {
+                console.error('Erro ao salvar o usuário', error);
+                throw error; 
+            });
+    }
 
     updateUsuario(usuario: Usuario) {
         const accessToken = localStorage.getItem('accessToken');

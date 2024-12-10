@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Denuncia } from '../../api/denuncia';
-import { DenunciaService } from '../../service/denuncia.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import * as L from 'leaflet';
 
 @Component({
     templateUrl: './dashboard.component.html',
@@ -12,15 +11,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     items!: MenuItem[];
 
-    denuncias!: Denuncia[];
-
     chartData: any;
 
     chartOptions: any;
 
     subscription!: Subscription;
 
-    constructor(private denunciaService: DenunciaService, public layoutService: LayoutService) {
+    constructor(public layoutService: LayoutService) {
         this.subscription = this.layoutService.configUpdate$
         .pipe(debounceTime(25))
         .subscribe((config) => {
@@ -30,12 +27,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initChart();
-        // this.denunciaService.getProductsSmall().then(data => this.products = data);
+        const map = L.map('map').setView([51.505, -0.09], 13);  // Defina a latitude, longitude e o zoom inicial
 
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' }
-        ];
+        // Adicionar camada de tiles (exemplo usando OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Adicionar marcador
+        L.marker([51.5, -0.09]).addTo(map)
+        .bindPopup('A marker')
+        .openPopup();
     }
 
     initChart() {

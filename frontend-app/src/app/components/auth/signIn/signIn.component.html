@@ -4,10 +4,13 @@
             <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
                 <div class="text-center mb-5">
                     <img src="assets/layout/images/logo.png" alt="logo" class="mb-5 w-20rem flex-shrink-0">                
-                    <div class="text-600 font-medium">Faça login para continuar</div>
+                    <div class="text-600 font-medium">Cadastre-se para começar</div>
                 </div>
-                <form (ngSubmit)="onLogin()">
+                <form>
                     <div>
+                        <label for="name" class="block text-900 text-xl font-medium mb-2">Nome</label>
+                        <input id="name" name="name" type="text" [(ngModel)]="name" placeholder="Nome completo" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem">
+
                         <label for="email" class="block text-900 text-xl font-medium mb-2">E-mail</label>
                         <input id="email" name="email" type="text" [(ngModel)]="email" placeholder="E-mail" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem">
 
@@ -16,14 +19,13 @@
 
                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
                             <div class="flex align-items-center">
-                                <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
-                                <label for="rememberme1">Lembre de mim</label>
+                                <p-checkbox id="terms" name="terms" [binary]="true" styleClass="mr-2" [(ngModel)]="termsAccepted"></p-checkbox>
+                                <label for="terms">Aceito os termos e condições</label>
                             </div>
-                            <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Esqueceu a senha?</a>
                         </div>
-                        <button type="submit" pButton pRipple label="Entrar" class="w-full p-3 text-xl"></button>
+                        <button pButton pRipple label="Cadastrar" class="w-full p-3 text-xl" (click)="cadastrarUsuario()"></button>
                         <div class="flex justify-content-center align-items-center mt-3">
-                        Não tem uma conta?<a [routerLink]="['/auth/signIn']" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Clique aqui para solicitar</a>
+                            Já tem uma conta?<a [routerLink]="['/auth/signIn']" class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Faça login</a>
                         </div>
                     </div>
                 </form>
