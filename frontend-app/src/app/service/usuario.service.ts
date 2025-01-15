@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Usuario } from '../api/usuario';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UsuarioService {
@@ -89,6 +90,22 @@ export class UsuarioService {
                 throw error; 
             });
     }    
+
+    alterarSenha(id: string, senha_atual: string, senha_nova: string, confirmar_senha_nova: string): Observable<any> {
+        const url = `${this.apiUrl}${id}/senha`;
+        const body = {
+            senha_atual: senha_atual,
+            senha_nova: senha_nova,
+            confirmar_senha_nova: confirmar_senha_nova,
+        };
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        });
+
+        return this.http.put(url, body, { headers });
+    }
 
     // // Deletar um usuário
     // deleteUsuario(id: string) {

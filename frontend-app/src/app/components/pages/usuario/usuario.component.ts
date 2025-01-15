@@ -81,47 +81,20 @@ export class UsuarioComponent implements OnInit {
             return;
         }
     
-        // this.usuarioService.verificarSenhaAtual(this.usuario.id, this.senhaAtual).then(isSenhaCorreta => {
-        //     if (isSenhaCorreta) {
-        //         this.usuario.senha = this.novaSenha;  
-    
-        //         this.usuarioService.updateUsuario(this.usuario).then(response => {
-        //             this.messageService.add({
-        //                 severity: 'success',
-        //                 summary: 'Sucesso',
-        //                 detail: 'Senha atualizada com sucesso.',
-        //                 life: 3000
-        //             });
-    
-        //             // Fecha o modal e limpa os campos
-        //             this.senhaDialog = false;
-        //             this.senhaAtual = '';
-        //             this.novaSenha = '';
-        //             this.confirmarSenha = '';
-        //         }).catch(error => {
-        //             this.messageService.add({
-        //                 severity: 'error',
-        //                 summary: 'Erro',
-        //                 detail: 'Erro ao atualizar a senha. Tente novamente.',
-        //                 life: 3000
-        //             });
-        //         });
-        //     } else {
-        //         this.messageService.add({
-        //             severity: 'error',
-        //             summary: 'Erro',
-        //             detail: 'Senha atual incorreta.',
-        //             life: 3000
-        //         });
-        //     }
-        // }).catch(error => {
-        //     this.messageService.add({
-        //         severity: 'error',
-        //         summary: 'Erro',
-        //         detail: 'Erro ao verificar a senha atual.',
-        //         life: 3000
-        //     });
-        // });
+        this.usuarioService.alterarSenha(this.usuario.id, this.senhaAtual, this.novaSenha, this.confirmarSenha)
+        .subscribe({
+            next: (response) => {
+              const successMessage = response.response?.mensagem || 'Senha alterada com sucesso!!';
+              this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: successMessage});
+              setTimeout(() => {
+                window.location.reload();  
+              }, 1500);
+            },
+            error: (error) => {
+              const errorMessage = error.error?.error || 'Erro desconhecido';
+              this.messageService.add({ severity: 'error', summary: 'Erro', detail: errorMessage});
+            }
+          });
     }
 
     // hideDialog() {
