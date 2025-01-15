@@ -7,6 +7,8 @@ from dotenv import load_dotenv, find_dotenv
 from ..models.authModel import AuthModel
 from ..models.usuarioModel import Usuario
 from werkzeug.security import check_password_hash
+from flask_jwt_extended import jwt_required, get_jwt
+
 
 from marshmallow import ValidationError
 
@@ -41,3 +43,19 @@ class Token(Resource):
             "access_token": access_token,
             "expires_in": seconds_to_expire
         }, 200
+    
+@authNs.route('/logout')
+class Logout(Resource):
+    @authNs.doc(description='Endpoint para fazer logout')
+    @jwt_required()  # Requer autenticação
+    def post(self):
+        """Realiza o logout do usuário"""
+        # Obter o JTI do token
+        jti = get_jwt()["jti"]
+
+        # Adicionar o token à lista negra
+        blacklist_token = BlacklistToken(jti=jti)
+        db.session.add(blacklist_token)
+        db.session.commit()
+
+        return {"mensagem": "Logout realizado com sucesso!"}, 200
