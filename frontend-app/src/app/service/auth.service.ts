@@ -15,4 +15,13 @@ export class AuthService {
   
       return this.http.post(this.apiUrl, body, { headers });
     }
+
+    logout(token: string): Observable<any> {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`, 
+        'Content-Type': 'application/json',
+      });
+
+      return this.http.post(`${this.apiUrl}logout`, {}, { headers });
+    }
 }

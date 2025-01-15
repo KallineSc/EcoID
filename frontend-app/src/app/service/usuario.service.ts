@@ -30,7 +30,6 @@ export class UsuarioService {
 
     getUsuarioById(id: string) {
         const accessToken = localStorage.getItem('accessToken');
-        console.log('Access Token:', accessToken);
     
         let headers = new HttpHeaders().set('Content-Type', 'application/json');
         if (accessToken) {
@@ -40,8 +39,7 @@ export class UsuarioService {
         return this.http.get<any>(`${this.apiUrl}${id}`, { headers })
             .toPromise()
             .then(res => {
-                console.log('Usuário obtido com sucesso:', res);
-                return res as Usuario; // Converte a resposta no modelo Usuario
+                return res as Usuario;
             })
             .catch(error => {
                 console.error(`Erro ao buscar o usuário com ID ${id}:`, error);
