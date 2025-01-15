@@ -84,11 +84,11 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="latitude">Latitude</label>
-                        <p-inputNumber id="latitude" name="latitude" [(ngModel)]="denuncia.latitude" mode="decimal" min="-90" max="90" step="0.000001"></p-inputNumber>
+                        <input type="text" pInputText id="latitude" name="latitude" [(ngModel)]="denuncia.latitude" />
                     </div>
                     <div class="field col">
                         <label for="longitude">Longitude</label>
-                        <p-inputNumber id="longitude" name="longitude" [(ngModel)]="denuncia.longitude" mode="decimal" min="-180" max="180" step="0.000001"></p-inputNumber>
+                        <input type="text" pInputText id="longitude" name="longitude" [(ngModel)]="denuncia.longitude" />
                     </div>
                 </div>                
             </ng-template>

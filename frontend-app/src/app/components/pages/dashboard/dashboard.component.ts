@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Subscription, debounceTime } from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { DenunciaService } from 'src/app/service/denuncia.service';
+import { jwtDecode } from 'jwt-decode';
+import { from } from 'rxjs';
 import * as L from 'leaflet';
 
 @Component({
@@ -17,86 +20,61 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     subscription!: Subscription;
 
-    constructor(public layoutService: LayoutService) {
-        this.subscription = this.layoutService.configUpdate$
-        .pipe(debounceTime(25))
-        .subscribe((config) => {
-            this.initChart();
-        });
+    map!: L.Map;
+
+    getUserIdFromToken(): string | null {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            try {
+                const decoded: any = jwtDecode(token);  
+                return decoded.sub; 
+            } catch (error) {
+                console.error('Erro ao decodificar o token', error);
+                return null;
+            }
+        }
+        return null; 
+    }
+
+    constructor(public layoutService: LayoutService, private denunciaService: DenunciaService ) {
     }
 
     ngOnInit() {
-        this.initChart();
-        const map = L.map('map').setView([51.505, -0.09], 13);  // Defina a latitude, longitude e o zoom inicial
+        this.map = L.map('map').setView([-3.880145, -38.597317], 10);
 
-        // Adicionar camada de tiles (exemplo usando OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(this.map);
 
-        // Adicionar marcador
-        L.marker([51.5, -0.09]).addTo(map)
-        .bindPopup('A marker')
-        .openPopup();
+        this.loadDenuncias();
     }
 
-    initChart() {
-        const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        this.chartData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    borderColor: documentStyle.getPropertyValue('--bluegray-700'),
-                    tension: .4
-                },
-                {
-                    label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--green-600'),
-                    borderColor: documentStyle.getPropertyValue('--green-600'),
-                    tension: .4
-                }
-            ]
-        };
+    private loadDenuncias() {
+        const userId = this.getUserIdFromToken();
 
-        this.chartOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: textColor
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
+        L.Marker.prototype.options.icon = L.icon({
+            iconUrl: 'assets/leaflet/images/marker-icon.png',
+            iconRetinaUrl: 'assets/leaflet/images/marker-icon-2x.png', // Ícone em alta resolução
+            shadowUrl: 'assets/leaflet/images/marker-shadow.png', // Se você quiser usar sombra também
+          
+            // Define o tamanho do ícone
+            iconSize: [25, 41], // Largura e altura do ícone, em pixels
+          
+            // Define o ponto de ancoragem (onde o ícone será "preso")
+            iconAnchor: [12, 41], // Posição no ícone, de modo que a base do ícone fique no marcador
+          
+            // Define o ponto de ancoragem do popup
+            popupAnchor: [1, -34], // Se você usar popups, é possível ajustar a posição do texto
+          });
+
+        from(this.denunciaService.getDenuncias(userId)).subscribe(denuncias => {
+            denuncias.forEach(denuncia => {
+                L.marker([denuncia.latitude, denuncia.longitude])
+                    .addTo(this.map)
+                    .bindPopup(`<b>Denúncia:</b> ${denuncia.descricao}`);
+            });
+        });
     }
 
     ngOnDestroy() {
