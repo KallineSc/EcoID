@@ -2,7 +2,7 @@ from flask_restx import fields, Namespace
 
 usuarioNs = Namespace('usuarios', description='Operações relacionadas aos usuários')
 
-UsuarioModel = usuarioNs.model('Usuario', {
+UsuarioModel = usuarioNs.model('UsuarioModel', {
     'nome': fields.String(
         description='Nome do usuário',
         required=True,
@@ -20,7 +20,7 @@ UsuarioModel = usuarioNs.model('Usuario', {
     )
 })
 
-UsuarioUpdateModel = usuarioNs.model('Usuario', {
+UsuarioUpdateModel = usuarioNs.model('UsuarioUpdateModel', {
     'nome': fields.String(
         description='Nome do usuário',
         example='João Silva'
@@ -28,10 +28,16 @@ UsuarioUpdateModel = usuarioNs.model('Usuario', {
     'email': fields.String(
         description='Email do usuário',
         example='joao.silva@example.com'
+    )
+})
+
+UsuarioUpdateSenha = usuarioNs.model('UsuarioUpdateSenha', {
+    'senha_atual': fields.String(
+        description='Senha atual do usuário',
+        example='senhaSegura'
     ),
-    'senha': fields.String(
-        description='Senha do usuário',
+    'senha_nova': fields.String(
+        description='Senha nova do usuário',
         example='senhaSegura123'
     )
 })
-usuarioNs.add_model('Usuario', UsuarioModel)
