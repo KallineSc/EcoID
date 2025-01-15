@@ -8,8 +8,8 @@ from ..models.authModel import AuthModel
 from ..models.usuarioModel import Usuario
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import jwt_required, get_jwt
-
-
+from app.models.blacklistTokenModel import BlacklistToken
+from ..database import db
 from marshmallow import ValidationError
 
 dotenv_path = find_dotenv()
@@ -46,14 +46,12 @@ class Token(Resource):
     
 @authNs.route('/logout')
 class Logout(Resource):
-    @authNs.doc(description='Endpoint para fazer logout')
-    @jwt_required()  # Requer autenticação
+    @authNs.doc(description='Endpoint para fazer logout', security='Bearer')
+    @jwt_required()
     def post(self):
         """Realiza o logout do usuário"""
-        # Obter o JTI do token
         jti = get_jwt()["jti"]
 
-        # Adicionar o token à lista negra
         blacklist_token = BlacklistToken(jti=jti)
         db.session.add(blacklist_token)
         db.session.commit()

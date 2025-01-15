@@ -3,13 +3,28 @@ from flask_jwt_extended import JWTManager
 from flask_restx import Api
 from flask_cors import CORS
 from .config import Config
-
 from .routes.authRoute import authNs
 from .routes.usuarioRoute import usuarioNs
 from .routes.denunciaRoute import denunciaNs
 from .database import init_db
+from app.models.blacklistTokenModel import BlacklistToken
 
 jwt = JWTManager()
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(jwt_header, jwt_payload):
+    """
+    Verifica se o token JWT está na blacklist.
+    """
+    jti = jwt_payload['jti']  # JWT ID
+    return BlacklistToken.query.filter_by(jti=jti).first() is not None
+
+@jwt.revoked_token_loader
+def token_revoked_callback(jwt_header, jwt_payload):
+    """
+    Callback para personalizar a mensagem de token revogado.
+    """
+    return {"mensagem": "O token foi revogado."}, 401
 
 def create_app():
     app = Flask(__name__)
