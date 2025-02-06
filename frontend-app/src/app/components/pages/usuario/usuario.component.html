@@ -1,0 +1,59 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <div class="p-toolbar-group-left">
+                    <h5 class="m-0">Alteração de Informações do Usuário</h5>
+                </div>
+            </p-toolbar>
+        
+            <form #userForm="ngForm">
+                <div class="field mb-4">
+                    <label for="id">ID</label>
+                    <input id="id" type="text" pInputText [(ngModel)]="usuario.id" name="id" readonly class="ml-3 p-inputtext p-disabled" />
+                </div>
+        
+                <div class="field mb-4">
+                    <label for="nome">Nome</label>
+                    <input id="nome" type="text" pInputText [(ngModel)]="usuario.nome" name="nome" required class="ml-3"/>
+                </div>
+        
+                <div class="field mb-4">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" pInputText [(ngModel)]="usuario.email" name="email" required class="ml-3"/>
+                </div>
+        
+                <!-- Botão para alterar a senha -->
+                <div class="field mb-4">
+                    <button pButton pRipple label="Salvar Alterações" class="p-button-rounded p-button-success" (click)="saveUsuario()"></button>
+                    <button pButton pRipple label="Alterar Senha" class="ml-3 p-button-rounded p-button-warning" (click)="openSenhaDialog()"></button>
+                </div>
+            </form>
+        
+            <!-- Modal para alteração de senha -->
+            <p-dialog [(visible)]="senhaDialog" header="Alterar Senha" [modal]="true" [closable]="true" [style]="{ width: '30vw' }">
+                <form #senhaForm="ngForm">
+                    <div class="field mb-4">
+                        <label for="senhaAtual">Senha Atual</label>
+                        <input id="senhaAtual" type="password" pInputText [(ngModel)]="senhaAtual" name="senhaAtual" required class="ml-3"/>
+                    </div>
+        
+                    <div class="field mb-4">
+                        <label for="novaSenha">Nova Senha</label>
+                        <input id="novaSenha" type="password" pInputText [(ngModel)]="novaSenha" name="novaSenha" required class="ml-3"/>
+                    </div>
+        
+                    <div class="field mb-4">
+                        <label for="confirmarSenha">Confirmar Nova Senha</label>
+                        <input id="confirmarSenha" type="password" pInputText [(ngModel)]="confirmarSenha" name="confirmarSenha" required class="ml-3"/>
+                    </div>
+        
+                    <div class="field">
+                        <button pButton pRipple label="Salvar Senha" class="p-button-rounded p-button-success" (click)="updateSenha()"></button>
+                    </div>
+                </form>
+            </p-dialog>
+        </div>        
+    </div>
+</div>
