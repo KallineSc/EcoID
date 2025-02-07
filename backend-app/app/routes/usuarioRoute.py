@@ -24,7 +24,8 @@ class UsuarioResource(Resource):
         
         data = request.get_json()
         if Usuario.query.filter_by(email=data['email']).first():
-            return {"erros": "Email já cadastrado"}, 400
+            return {"erros": {"email": ["Email já cadastrado"]}}, 400
+        
         
         senha_hash = generate_password_hash(data['senha'])
 

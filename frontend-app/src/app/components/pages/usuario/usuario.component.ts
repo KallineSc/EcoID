@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/api/usuario';
 import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
 import { UsuarioService } from 'src/app/service/usuario.service';
 import { jwtDecode } from 'jwt-decode';
-import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './usuario.component.html',

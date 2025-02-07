@@ -23,7 +23,6 @@ export class SignInComponent {
   email: string = '';
   password: string = '';
   termsAccepted: boolean = false;
-  submitted: boolean = false;
 
   constructor(
     private usuarioService: UsuarioService, 
@@ -32,10 +31,7 @@ export class SignInComponent {
   ) {}
 
   cadastrarUsuario() {
-    this.submitted = true;
-
     if (!this.name || !this.email || !this.password) {
-      console.error('Erro ao excluir a denúncia:');
       this.messageService.add({severity: 'error', summary: 'Erro', detail: 'Por favor, preencha todos os campos!'});
       return;
     }
@@ -57,7 +53,17 @@ export class SignInComponent {
         this.router.navigate(['/auth/login']);
       })
       .catch(error => {
-        this.messageService.add({severity: 'error', summary: 'Erro', detail: 'Erro ao cadastrar usuário. Tente novamente.'});
+        const erros = error?.error?.erros || {};
+        Object.keys(erros).forEach(campo => {
+          erros[campo].forEach(mensagem => {
+            this.messageService.add({
+              severity: 'error',
+              summary: `Erro no campo ${campo}`,
+              detail: mensagem,
+              life: 3000
+            });
+          });
+        });
       });
   }
 }

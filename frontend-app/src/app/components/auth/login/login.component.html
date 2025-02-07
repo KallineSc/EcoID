@@ -7,6 +7,7 @@
                     <div class="text-600 font-medium">Faça login para continuar</div>
                 </div>
                 <form (ngSubmit)="onLogin()">
+                    <p-toast></p-toast>
                     <div>
                         <label for="email" class="block text-900 text-xl font-medium mb-2">E-mail</label>
                         <input id="email" name="email" type="text" [(ngModel)]="email" placeholder="E-mail" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem">
