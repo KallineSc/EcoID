@@ -8,12 +8,18 @@ import { DenunciaService } from './service/denuncia.service';
 import { UsuarioService } from './service/usuario.service';
 import { AuthService } from './service/auth.service';
 import { IconService } from './service/icon.service';
+import { RelatorioService } from './service/relatorio.service';
 
 @NgModule({
     declarations: [AppComponent, NotfoundComponent],
     imports: [AppRoutingModule, AppLayoutModule],
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },IconService, DenunciaService, UsuarioService, AuthService
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        IconService, 
+        DenunciaService, 
+        UsuarioService, 
+        AuthService,
+        RelatorioService
     ],
     bootstrap: [AppComponent],
 })

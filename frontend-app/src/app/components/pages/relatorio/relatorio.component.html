@@ -1,0 +1,27 @@
+<div class="grid">
+  <div class="col-12">
+      <div class="card px-6 py-6">
+          <h2>Gerar relatório de denúncias</h2>
+
+          <div class="md:flex-row md:align-items-center md:justify-content-between">
+              <div class="field">
+                  <label for="format" style="margin: 1rem;">Escolha o formato: </label>
+                  <p-dropdown 
+                      [options]="formatOptions" 
+                      [(ngModel)]="selectedFormat" 
+                      placeholder="Selecione o formato">
+                  </p-dropdown>
+              </div>
+
+              <button 
+                  pButton 
+                  pRipple 
+                  label="Gerar Relatório" 
+                  icon="pi pi-file" 
+                  class="p-button-primary" 
+                  (click)="generateRelatorio()">
+              </button>
+          </div>
+      </div>
+  </div>
+</div>
