@@ -6,8 +6,10 @@ from .config import Config
 from .routes.authRoute import authNs
 from .routes.usuarioRoute import usuarioNs
 from .routes.denunciaRoute import denunciaNs
+from .routes.relatorioRoute import relatorioNs
 from .database import init_db
 from app.models.blacklistTokenModel import BlacklistToken
+from app.models.pontoDeColetaModel import PontoDeColeta
 
 jwt = JWTManager()
 
@@ -46,5 +48,6 @@ def create_app():
     api.add_namespace(authNs)
     api.add_namespace(usuarioNs)
     api.add_namespace(denunciaNs)
+    api.add_namespace(relatorioNs)
 
     return app

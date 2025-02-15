@@ -6,6 +6,7 @@ from ..schemas.denunciaSchema import DenunciaSchema
 from ..models.denunciaModel import Denuncia
 from ..swagger.denunciaModel import denunciaNs, DenunciaModel, DenunciaUpdateModel
 from ..database import db
+from ..utils.denunciaIterator import ListaDenuncias
 
 @denunciaNs.route('/')
 class DenunciaListResource(Resource):
@@ -37,18 +38,13 @@ class DenunciaListResource(Resource):
     @jwt_required()
     def get(self):
         """Lista todas as denúncias"""
-        denuncias = Denuncia.query.all()
-        resultado = [
-            {
-                'id': str(denuncia.id),
-                'titulo': denuncia.titulo,
-                'descricao': denuncia.descricao,
-                'latitude': denuncia.latitude,
-                'longitude': denuncia.longitude,
-                'usuario_id': str(denuncia.usuario_id)
-            }
-            for denuncia in denuncias
-        ]
+        lista_denuncias = ListaDenuncias()
+
+        lista_denuncias.carregar_denuncias()
+        iterador = iter(lista_denuncias)
+        
+        resultado = [denuncia for denuncia in iterador]
+
         return {"denuncias": resultado}, 200
 
 @denunciaNs.route('/<uuid:id>')

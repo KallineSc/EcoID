@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
         { path: 'denuncia', loadChildren: () => import('./denuncia/denuncia.module').then(m => m.CrudModule) },
         { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
         { path: 'usuario', loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule) },
+        { path: 'relatorios', loadChildren: () => import('./relatorio/relatorio.module').then(m => m.RelatorioModule) },
 
     ])],
     exports: [RouterModule]

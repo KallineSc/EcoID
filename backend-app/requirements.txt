@@ -11,3 +11,4 @@ psycopg2-binary
 gevent
 marshmallow
 gunicorn
+fpdf
