@@ -6,6 +6,7 @@ import { AppLayoutModule } from './layout/app.layout.module';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { DenunciaService } from './service/denuncia.service';
 import { UsuarioService } from './service/usuario.service';
+import { ClassificacaoService } from './service/classificacao.service';
 import { AuthService } from './service/auth.service';
 import { IconService } from './service/icon.service';
 import { RelatorioService } from './service/relatorio.service';
@@ -18,6 +19,7 @@ import { RelatorioService } from './service/relatorio.service';
         IconService, 
         DenunciaService, 
         UsuarioService, 
+        ClassificacaoService,
         AuthService,
         RelatorioService
     ],

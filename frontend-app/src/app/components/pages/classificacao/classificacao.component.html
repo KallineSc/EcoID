@@ -1,0 +1,46 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <div class="p-toolbar-group-left">
+                    <h5 class="m-0">Classificação de Materiais Recicláveis</h5>
+                </div>
+            </p-toolbar>
+
+            <form #classificacaoForm="ngForm">
+                <!-- Upload de Imagem -->
+                <div class="field mb-4">
+                    <label for="imagem">Upload de Imagem</label>
+                    <input id="imagem" type="file" (change)="onFileSelected($event)" accept="image/*" pInputText class="ml-3"/>
+                </div>
+
+                <!-- Botões de Ação -->
+                <div class="field mb-4">
+                    <button pButton pRipple label="Classificar" class="p-button-success mr-2" (click)="enviarImagem()" [disabled]="!imagemSelecionada"></button>
+                    <button pButton pRipple label="Limpar" icon="pi pi-trash" class="p-button-danger" (click)="limpar()"></button>
+                
+                </div>
+            </form>
+
+            <!-- Exibir Feedback -->
+            <div *ngIf="loading" class="loading">
+                <p-progressSpinner></p-progressSpinner>
+                <p>Classificando...</p>
+            </div>
+
+            <div *ngIf="erro" class="erro">
+                <p-message severity="error" text="{{ erro }}"></p-message>
+            </div>
+
+            <div *ngIf="classificacao">
+                <p-card>
+                  <ng-template pTemplate="title">Resultado</ng-template>
+                  <ng-template pTemplate="content">
+                    <p [innerHTML]="classificacao"></p> <!-- Correção aqui: use [innerHTML] -->
+                  </ng-template>
+                </p-card>
+            </div>
+        </div>        
+    </div>
+</div>

@@ -36,7 +36,7 @@ class ClassificacaoResource(Resource):
                 "contents": [{
                     "parts": [
                         {"inlineData": {"mimeType": imagem.mimetype, "data": imagem_base64}},  
-                        {"text": "Esta imagem contém material reciclável? Identifique se é plástico, vidro, papel, metal ou outro material."}
+                        {"text": "Esta imagem contém material reciclável? Identifique se é plástico, vidro, papel, metal ou outro material. Se for material reciclável, informe como pode ser descartado"}
                     ]
                 }]
             }
