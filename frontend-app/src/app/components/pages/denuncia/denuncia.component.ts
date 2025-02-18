@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Denuncia } from 'src/app/api/denuncia';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DenunciaService } from 'src/app/service/denuncia.service';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import * as L from 'leaflet';
 
 @Component({
     templateUrl: './denuncia.component.html',
@@ -12,24 +13,20 @@ import { Router } from '@angular/router';
 })
 export class DenunciaComponent implements OnInit {
 
+    @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
+    map!: L.Map;
+    marker!: L.Marker;
+    mapInitialized: boolean = false;
+
     denunciaDialog: boolean = false;
-
     deleteDenunciaDialog: boolean = false;
-
     deleteDenunciasDialog: boolean = false;
-
     denuncias: Denuncia[] = [];
-
     denuncia: Denuncia = {};
-
     selectedDenuncias: Denuncia[] = [];
-
     submitted: boolean = false;
-
     cols: any[] = [];
-
     statuses: any[] = [];
-
     rowsPerPageOptions = [5, 10, 20];
 
     constructor(private denunciaService: DenunciaService, private messageService: MessageService, private router: Router) { }
@@ -47,10 +44,52 @@ export class DenunciaComponent implements OnInit {
         ];
     }
 
+    initializeMap() {
+        if (!this.mapContainer || !this.mapContainer.nativeElement) {
+            console.error("Elemento mapContainer não encontrado!");
+            return;
+        }
+        if (!this.map) {
+            setTimeout(() => {
+                this.map = L.map(this.mapContainer.nativeElement).setView([-3.880145, -38.597317], 10);
+                L.Marker.prototype.options.icon = L.icon({
+                    iconUrl: 'assets/leaflet/images/marker-icon.png',
+                    iconRetinaUrl: 'assets/leaflet/images/marker-icon-2x.png', 
+                          
+                    iconSize: [25, 41], 
+                });
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(this.map);
+
+                this.map.on('click', (event: any) => {
+                    const { lat, lng } = event.latlng;
+                    this.denuncia.latitude = lat;
+                    this.denuncia.longitude = lng;
+
+                    if (this.marker) {
+                        this.marker.setLatLng([lat, lng]);
+                    } else {
+                        this.marker = L.marker([lat, lng]).addTo(this.map);
+                    }
+                });
+
+                this.map.invalidateSize();
+            }, 300);
+        }
+    }
     openNew() {
         this.denuncia = {};
         this.submitted = false;
         this.denunciaDialog = true;
+
+        setTimeout(() => {
+            if (!this.mapInitialized) {
+                this.initializeMap();
+                this.mapInitialized = true;
+            }
+        }, 500); 
     }
 
     deleteSelectedDenuncias() {

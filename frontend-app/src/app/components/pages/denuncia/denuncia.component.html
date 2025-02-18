@@ -69,7 +69,7 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="denunciaDialog" [style]="{width: '450px'}" header="Denúncia" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="denunciaDialog" [style]="{width: '650px'}" header="Denúncia" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <div class="field">
                     <label for="titulo">Título</label>
@@ -80,15 +80,18 @@
                     <label for="descricao">Descrição</label>
                     <textarea id="descricao" name="descricao" pInputTextarea [(ngModel)]="denuncia.descricao" required rows="3" cols="20"></textarea>
                 </div>
-
+                <div class="field">
+                    <label>Selecione no mapa:</label>
+                    <div #mapContainer style="height: 300px; width: 100%;"></div>
+                </div>
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="latitude">Latitude</label>
-                        <input type="text" pInputText id="latitude" name="latitude" [(ngModel)]="denuncia.latitude" />
+                        <input type="text" pInputText id="latitude" readonly name="latitude" [(ngModel)]="denuncia.latitude" />
                     </div>
                     <div class="field col">
                         <label for="longitude">Longitude</label>
-                        <input type="text" pInputText id="longitude" name="longitude" [(ngModel)]="denuncia.longitude" />
+                        <input type="text" pInputText id="longitude" readonly name="longitude" [(ngModel)]="denuncia.longitude" />
                     </div>
                 </div>                
             </ng-template>
