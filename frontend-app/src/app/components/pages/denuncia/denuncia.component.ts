@@ -49,47 +49,41 @@ export class DenunciaComponent implements OnInit {
             console.error("Elemento mapContainer não encontrado!");
             return;
         }
-        if (!this.map) {
-            setTimeout(() => {
-                this.map = L.map(this.mapContainer.nativeElement).setView([-3.880145, -38.597317], 10);
-                L.Marker.prototype.options.icon = L.icon({
-                    iconUrl: 'assets/leaflet/images/marker-icon.png',
-                    iconRetinaUrl: 'assets/leaflet/images/marker-icon-2x.png', 
-                          
-                    iconSize: [25, 41], 
-                });
+        this.map = L.map(this.mapContainer.nativeElement).setView([-3.880145, -38.597317], 10);
+        L.Marker.prototype.options.icon = L.icon({
+            iconUrl: 'assets/leaflet/images/marker-icon.png',
+            iconRetinaUrl: 'assets/leaflet/images/marker-icon-2x.png', 
+                    
+            iconSize: [25, 41], 
+        });
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(this.map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(this.map);
 
-                this.map.on('click', (event: any) => {
-                    const { lat, lng } = event.latlng;
-                    this.denuncia.latitude = lat;
-                    this.denuncia.longitude = lng;
+        this.map.on('click', (event: any) => {
+            const { lat, lng } = event.latlng;
+            this.denuncia.latitude = lat;
+            this.denuncia.longitude = lng;
 
-                    if (this.marker) {
-                        this.marker.setLatLng([lat, lng]);
-                    } else {
-                        this.marker = L.marker([lat, lng]).addTo(this.map);
-                    }
-                });
+            if (this.marker) {
+                this.marker.setLatLng([lat, lng]);
+            } else {
+                this.marker = L.marker([lat, lng]).addTo(this.map);
+            }
+        });
 
-                this.map.invalidateSize();
-            }, 300);
-        }
+        this.map.invalidateSize();
     }
+    
     openNew() {
         this.denuncia = {};
         this.submitted = false;
         this.denunciaDialog = true;
 
         setTimeout(() => {
-            if (!this.mapInitialized) {
-                this.initializeMap();
-                this.mapInitialized = true;
-            }
-        }, 500); 
+            this.initializeMap();
+        }, 200); 
     }
 
     deleteSelectedDenuncias() {
