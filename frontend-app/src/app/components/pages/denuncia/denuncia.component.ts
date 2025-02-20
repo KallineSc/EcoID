@@ -80,6 +80,7 @@ export class DenunciaComponent implements OnInit {
         this.denuncia = {};
         this.submitted = false;
         this.denunciaDialog = true;
+        this.marker = null;
 
         setTimeout(() => {
             this.initializeMap();
